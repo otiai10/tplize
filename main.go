@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"go/build"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -34,6 +35,35 @@ func Run(args []string) error {
 	}
 	if len(files) == 0 {
 		return fmt.Errorf("no files found on this directory: %s", gendir)
+	}
+
+	pkg, err := build.ImportDir(gendir, 0)
+	if err != nil {
+		return err
+	}
+
+	gen := &Generator{
+		Files: files,
+		Pkg:   pkg,
+	}
+
+	if _, err = os.Stat(gen.Destination()); err == nil {
+		// TODO: Refactor
+		if err = os.Remove(gen.Destination()); err != nil {
+			return err
+		}
+	}
+	f, err := os.Create(gen.Destination())
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	if err = gen.Stack(); err != nil {
+		return err
+	}
+	if err = gen.Flush(f); err != nil {
+		return err
 	}
 
 	return nil
