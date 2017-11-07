@@ -28,12 +28,12 @@ func Run(args []string) error {
 		return err
 	}
 
-	targets, err := parsed.ToTargetList(gendir)
+	files, err := parsed.ToTargetFiles(gendir)
 	if err != nil {
 		return err
 	}
-	if len(targets) == 0 {
-		return fmt.Errorf("no targets found on this directory: %s", gendir)
+	if len(files) == 0 {
+		return fmt.Errorf("no files found on this directory: %s", gendir)
 	}
 
 	return nil
@@ -45,8 +45,8 @@ type Args struct {
 	Files   []string
 }
 
-// ToTargetList ...
-func (args *Args) ToTargetList(dir string) ([]string, error) {
+// ToTargetFiles ...
+func (args *Args) ToTargetFiles(dir string) ([]string, error) {
 
 	files := []string{}
 
