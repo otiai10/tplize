@@ -41,11 +41,23 @@ func (g *Generator) Stack() error {
 
 // read
 func (g *Generator) stack(entry string) error {
+
 	info, err := os.Stat(entry)
 	if err != nil {
 		return err
 	}
-	if !info.IsDir() {
+
+	if info.IsDir() {
+		matches, err := filepath.Glob(filepath.Join(entry, "*"))
+		if err != nil {
+			return err
+		}
+		for _, e := range matches {
+			if err = g.stack(e); err != nil {
+				return err
+			}
+		}
+	} else {
 		f, err := os.Open(entry)
 		if err != nil {
 			return err
@@ -57,15 +69,7 @@ func (g *Generator) stack(entry string) error {
 		}
 		g.Files[entry] = string(b)
 	}
-	matches, err := filepath.Glob(filepath.Join(entry, "*"))
-	if err != nil {
-		return err
-	}
-	for _, e := range matches {
-		if err = g.stack(e); err != nil {
-			return err
-		}
-	}
+
 	return nil
 }
 
