@@ -5,7 +5,7 @@
 When you want to embed any template in your cli tool, for example, it must be included in the exacutables,
 it means non-Go files are not included in it.
 
-`tplize` solves it in f**king easy way, to generate just a map.
+`tplize` solves it __in f**king easy way__ by generating just a map variable.
 
 # Example
 
@@ -49,7 +49,17 @@ var Tpl = map[string]string{
 }
 ```
 
-so that you can use the contents in your Go code.
+so that you can use the contents in your Go code like this
+
+```go
+example.Tpl["index.html"]
+```
+
+# Installation
+
+```sh
+go get -u github.com/otiai10/tplize
+```
 
 # Go generate
 
