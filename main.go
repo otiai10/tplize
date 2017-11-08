@@ -50,6 +50,7 @@ func Run(args []string) error {
 		FileNames: files,
 		Pkg:       pkg,
 		VarName:   parsed.VarName,
+		Output:    parsed.Output,
 	}
 
 	if _, err = os.Stat(gen.Destination()); err == nil {
@@ -80,6 +81,7 @@ type Args struct {
 	Files   []string
 	Path    string
 	VarName string
+	Output  string
 }
 
 // ToTargetFiles ...
@@ -149,6 +151,12 @@ func ParseArgs(args []string) (*Args, error) {
 				continue
 			}
 			parsed.Path = args[0]
+			args = args[1:] // Unshift again
+		case "-o", "--out":
+			if len(args) == 0 {
+				continue
+			}
+			parsed.Output = args[0]
 			args = args[1:] // Unshift again
 		default:
 			parsed.Files = append(parsed.Files, arg)

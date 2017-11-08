@@ -18,11 +18,15 @@ type Generator struct {
 	Pkg       *build.Package
 	Files     map[string]string
 	VarName   string
+	Output    string
 	buf       *bytes.Buffer
 }
 
 // Destination ...
 func (g *Generator) Destination() string {
+	if g.Output != "" {
+		return g.Output
+	}
 	return filepath.Join(g.Pkg.Dir, fmt.Sprintf("%s_templated.go", g.Pkg.Name))
 }
 
