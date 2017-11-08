@@ -29,6 +29,10 @@ func Run(args []string) error {
 		return err
 	}
 
+	if parsed.Path != "" {
+		gendir = filepath.Join(gendir, parsed.Path)
+	}
+
 	files, err := parsed.ToTargetFiles(gendir)
 	if err != nil {
 		return err
@@ -74,6 +78,7 @@ func Run(args []string) error {
 type Args struct {
 	Pattern *string
 	Files   []string
+	Path    string
 	VarName string
 }
 
@@ -138,6 +143,12 @@ func ParseArgs(args []string) (*Args, error) {
 				continue
 			}
 			parsed.VarName = args[0]
+			args = args[1:] // Unshift again
+		case "-p", "--path":
+			if len(args) == 0 {
+				continue
+			}
+			parsed.Path = args[0]
 			args = args[1:] // Unshift again
 		default:
 			parsed.Files = append(parsed.Files, arg)
