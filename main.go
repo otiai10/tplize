@@ -43,8 +43,9 @@ func Run(args []string) error {
 	}
 
 	gen := &Generator{
-		Files: files,
-		Pkg:   pkg,
+		FileNames: files,
+		Pkg:       pkg,
+		VarName:   parsed.VarName,
 	}
 
 	if _, err = os.Stat(gen.Destination()); err == nil {
@@ -73,6 +74,7 @@ func Run(args []string) error {
 type Args struct {
 	Pattern *string
 	Files   []string
+	VarName string
 }
 
 // ToTargetFiles ...
@@ -130,6 +132,12 @@ func ParseArgs(args []string) (*Args, error) {
 				continue
 			}
 			parsed.Pattern = &args[0]
+			args = args[1:] // Unshift again
+		case "-V", "--var":
+			if len(args) == 0 {
+				continue
+			}
+			parsed.VarName = args[0]
 			args = args[1:] // Unshift again
 		default:
 			parsed.Files = append(parsed.Files, arg)
