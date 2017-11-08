@@ -95,6 +95,7 @@ func (g *Generator) Flush(w io.Writer) (err error) {
 	g.write("var %s = map[string]string{\n", g.VarName)
 	for name, content := range g.Files {
 		name = strings.Replace(name, g.Pkg.Dir+"/", "", 1)
+		g.write("// %s\n", name)
 		g.write("\"%s\": `%s`,\n", name, content)
 	}
 	g.write("}\n")
